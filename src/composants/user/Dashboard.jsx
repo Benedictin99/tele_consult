@@ -1,78 +1,85 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link as ScrollLink } from "react-scroll";
+import { Link } from "react-router-dom";
+import ConsultationOverview from "./consultation/ConsultationOverview";
+import ConsultationDetails from "./consultation/ConsultationDetails";
+import ConsultationHistory from "./consultation/ConsultationHistory";
 
 const Dashboard = () => {
+  const [activeSection, setActiveSection] = useState("overview");
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // État pour gérer l'ouverture du menu sur mobile
+
+  // Fonction pour changer la section active
+  const handleSectionChange = (section) => {
+    setActiveSection(section);
+  };
+
+  // Composants à afficher en fonction de la section active
+  const renderContent = () => {
+    switch (activeSection) {
+      case "overview":
+        return <ConsultationOverview />;
+      case "details":
+        return <ConsultationDetails />;
+      case "history":
+        return <ConsultationHistory />;
+      default:
+        return <ConsultationOverview />;
+    }
+  };
+
   return (
-    <div className="flex h-screen flex-col md:flex-row">
-      {/* Barre de menu à gauche */}
-      <div className="w-full md:w-64 bg-blue-900 text-white p-6">
-        <h2 className="text-2xl font-bold mb-8">Menu</h2>
-        <ul>
-          <li className="mb-4">
-            <a href="#" className="hover:text-blue-400">
-              Accueil
-            </a>
-          </li>
-          <li className="mb-4">
-            <a href="#" className="hover:text-blue-400">
-              Consultation
-            </a>
-          </li>
-          <li className="mb-4">
-            <a href="#" className="hover:text-blue-400">
-              Discussion
-            </a>
-          </li>
-          <li className="mb-4">
-            <a href="#" className="hover:text-blue-400">
-              Profile
-            </a>
-          </li>
-        </ul>
-      </div>
+    <nav className="bg-white fixed w-full z-10">
+      <div className="container mx-auto p-4 flex justify-between items-center">
+        {/* Logo */}
+        <ScrollLink
+          to="accueil"
+          smooth={true}
+          duration={600}
+          className="cursor-pointer"
+        >
+          <h1 className="text-3xl font-bold">
+            <span className="text-black font-bold">TELE</span>
+            <span className="text-blue-600 font-extrabold">MEDECINE</span>
+          </h1>
+        </ScrollLink>
 
-      {/* Contenu principal */}
-      <div className="flex-1 flex flex-col">
-        {/* Barre de navigation en haut */}
-        <div className="bg-blue-700 text-white p-4 flex justify-between items-center">
-          <h1 className="text-3xl font-semibold">Telemedecine</h1>
-          <div className="flex items-center space-x-4">
-            <button className="bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-400">
-              Logout
-            </button>
-          </div>
-        </div>
-
-        {/* Section des indicateurs */}
-        <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Taux de glycémie */}
-          <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
-            <h3 className="text-xl font-bold text-blue-900">
-              Taux de Glycémie
-            </h3>
-            <p className="text-3xl text-blue-700">90 mg/dL</p>
-            <p className="text-gray-500">Normal</p>
-          </div>
-
-          {/* Température corporelle */}
-          <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
-            <h3 className="text-xl font-bold text-blue-900">
-              Température Corporelle
-            </h3>
-            <p className="text-3xl text-blue-700">36.7°C</p>
-            <p className="text-gray-500">Normal</p>
-          </div>
-
-          {/* Tension artérielle */}
-          <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
-            <h3 className="text-xl font-bold text-blue-900">
-              Tension Artérielle
-            </h3>
-            <p className="text-3xl text-blue-700">120/80 mmHg</p>
-            <p className="text-gray-500">Normale</p>
-          </div>
+        <div className="hidden md:flex flex-1 justify-end space-x-6 px-5 text-lg font-semibold">
+          <ScrollLink
+            to="accueil"
+            smooth={true}
+            duration={600}
+            className="text-gray-700 hover:text-blue-600 cursor-pointer"
+          >
+            Accueil
+          </ScrollLink>
+          <ScrollLink
+            to="services"
+            smooth={true}
+            duration={600}
+            className="text-gray-700 hover:text-blue-600 cursor-pointer"
+          >
+            Services
+          </ScrollLink>
+          <ScrollLink
+            to="about"
+            smooth={true}
+            duration={600}
+            className="text-gray-700 hover:text-blue-600 cursor-pointer"
+          >
+            À propos
+          </ScrollLink>
+          <ScrollLink
+            to="contact"
+            smooth={true}
+            duration={600}
+            className="text-gray-700 hover:text-blue-600 cursor-pointer"
+          >
+            Contact
+          </ScrollLink>
         </div>
       </div>
-    </div>
+    </nav>
   );
 };
 
