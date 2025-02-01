@@ -1,85 +1,92 @@
 import React, { useState } from "react";
-import { Link as ScrollLink } from "react-scroll";
-import { Link } from "react-router-dom";
-import ConsultationOverview from "./consultation/ConsultationOverview";
-import ConsultationDetails from "./consultation/ConsultationDetails";
-import ConsultationHistory from "./consultation/ConsultationHistory";
+import { FiUser, FiSettings, FiLogOut } from "react-icons/fi";
+import { HiOutlineMenu } from "react-icons/hi";
+import Home from "./Home";
+import Menu from "../../utils/Menu";
 
 const Dashboard = () => {
-  const [activeSection, setActiveSection] = useState("overview");
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // État pour gérer l'ouverture du menu sur mobile
+  const [activeMenu, setActiveMenu] = useState("Accueil");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-  // Fonction pour changer la section active
-  const handleSectionChange = (section) => {
-    setActiveSection(section);
-  };
-
-  // Composants à afficher en fonction de la section active
   const renderContent = () => {
-    switch (activeSection) {
-      case "overview":
-        return <ConsultationOverview />;
-      case "details":
-        return <ConsultationDetails />;
-      case "history":
-        return <ConsultationHistory />;
+    switch (activeMenu) {
+      case "Accueil":
+        return <Home />;
+      case "Consultation":
+        return <div>Contenu des consultations</div>;
+      case "Discussion":
+        return <div>Liste des discussions</div>;
+      case "Profile":
+        return <div>Profil utilisateur</div>;
       default:
-        return <ConsultationOverview />;
+        return <div>Contenu par défaut</div>;
     }
   };
 
   return (
-    <nav className="bg-white fixed w-full z-10">
-      <div className="container mx-auto p-4 flex justify-between items-center">
-        {/* Logo */}
-        <ScrollLink
-          to="accueil"
-          smooth={true}
-          duration={600}
-          className="cursor-pointer"
+    <div className="h-screen flex flex-col">
+      {/* Barre de navigation */}
+      <nav className="bg-white shadow-sm fixed top-0 left-0 w-full h-16 flex items-center px-6 justify-between z-10">
+        {/* Bouton Menu Mobile */}
+        <button
+          className="md:hidden p-2 bg-gray-200 rounded-md"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         >
-          <h1 className="text-3xl font-bold">
-            <span className="text-black font-bold">TELE</span>
-            <span className="text-blue-600 font-extrabold">MEDECINE</span>
-          </h1>
-        </ScrollLink>
+          <HiOutlineMenu className="text-2xl" />
+        </button>
 
-        <div className="hidden md:flex flex-1 justify-end space-x-6 px-5 text-lg font-semibold">
-          <ScrollLink
-            to="accueil"
-            smooth={true}
-            duration={600}
-            className="text-gray-700 hover:text-blue-600 cursor-pointer"
+        <h1 className="text-xl font-bold text-gray-700">Tableau de Bord</h1>
+
+        {/* Profil utilisateur */}
+        <div className="relative">
+          <button
+            onClick={() => setShowProfileMenu(!showProfileMenu)}
+            className="flex items-center gap-3 focus:outline-none"
           >
-            Accueil
-          </ScrollLink>
-          <ScrollLink
-            to="services"
-            smooth={true}
-            duration={600}
-            className="text-gray-700 hover:text-blue-600 cursor-pointer"
-          >
-            Services
-          </ScrollLink>
-          <ScrollLink
-            to="about"
-            smooth={true}
-            duration={600}
-            className="text-gray-700 hover:text-blue-600 cursor-pointer"
-          >
-            À propos
-          </ScrollLink>
-          <ScrollLink
-            to="contact"
-            smooth={true}
-            duration={600}
-            className="text-gray-700 hover:text-blue-600 cursor-pointer"
-          >
-            Contact
-          </ScrollLink>
+            <img
+              src="https://via.placeholder.com/40"
+              alt="User Profile"
+              className="w-10 h-10 rounded-full border"
+            />
+          </button>
+
+          {/* Menu déroulant */}
+          {showProfileMenu && (
+            <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-1">
+              <button className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-2">
+                <FiUser /> Profile
+              </button>
+              <button className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-2">
+                <FiSettings /> Paramètres
+              </button>
+              <button className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-2">
+                <FiLogOut /> Déconnexion
+              </button>
+            </div>
+          )}
+        </div>
+      </nav>
+
+      {/* Layout principal */}
+      <div className="flex flex-1 mt-16">
+        {/* Sidebar (Barre latérale) */}
+        <Menu
+          activeMenu={activeMenu}
+          setActiveMenu={setActiveMenu}
+          isSidebarOpen={isSidebarOpen}
+        />
+
+        {/* Contenu principal */}
+        <div
+          className={`flex-1 p-6 transition-all duration-300 ${
+            isSidebarOpen ? "md:ml-64" : "ml-0"
+          }`}
+        >
+          {renderContent()}
         </div>
       </div>
-    </nav>
+    </div>
   );
 };
 
